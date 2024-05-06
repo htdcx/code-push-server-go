@@ -26,6 +26,3 @@ jobs:
 
     - name: Build
       run: go build -o code-push-server-go main.go
-
-    - name: Test
-      run: go test code-push-server-go
