@@ -31,7 +31,7 @@ cd config
 vi (app.json or app.dev.json or app.prod.json) 
 # app.json
 {
-    "mode":"dev" #run read config app.{mode}.json
+    "mode":"prod" #run read config app.{mode}.json
 }
 # app.prod.json
 {
