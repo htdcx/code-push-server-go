@@ -1,15 +1,15 @@
-# Code-Push-Server-Go
-CodePush Server Go is a CodePush progam server,Use with [code-push-go](https://github.com/htdcx/code-push-go)
+# code-push-server-go
+Codepush server go is compatible with [react-native-code-push](https://github.com/microsoft/react-native-code-push). Need to be used with [code-push-go](https://github.com/htdcx/code-push-go). Only supported react-native
 
-## Support Version
+## Support version
 - mysql  >= 8.0
 - golang >= 1.21.5
 - redis  >= 5.0
 
-## Support Client Version
+## Support client version
 - [react-native-code-push](https://github.com/microsoft/react-native-code-push) >= 7.0
 
-## Support Storage
+## Support storage
 - Local
 - AWS S3 
 - FTP
@@ -91,6 +91,10 @@ set GOOS=linux #windows,darwin
 go build -o code-push-server-go(.exe) main.go
 
 #copy config/app.(model).json and config/app.json to run dir 
+
+#Linux server
+chmod +x code-push-go
+
 #run
 ./code-push-server-go
 ```
@@ -98,7 +102,7 @@ go build -o code-push-server-go(.exe) main.go
 - Username:admin
 - Password:admin
 
-### change password and user name
+### Change password and user name
 - Change mysql users tables (password need md5)
 
 #### Use [code-push-go](https://github.com/htdcx/code-push-go)
@@ -107,4 +111,4 @@ go build -o code-push-server-go(.exe) main.go
 ```
 
 ## License
-MIT License [read](https://github.com/htdcx/code-push-server-go/blob/main/LICENSE)
+MIT License [Read](https://github.com/htdcx/code-push-server-go/blob/main/LICENSE)
