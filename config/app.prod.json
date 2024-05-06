@@ -1,0 +1,44 @@
+{
+    "DBUser": {
+        "Write": {
+            "UserName": "root",
+            "Password": "",
+            "Host": "127.0.0.1",
+            "Port": 3306,
+            "DBname": "code-push"
+        },
+        "MaxIdleConns": 10,
+        "MaxOpenConns": 100,
+        "ConnMaxLifetime": 1
+    },
+    "Redis": {
+        "Host": "127.0.0.1",
+        "Prot": 6379,
+        "DBIndex": 0,
+        "UserName": "",
+        "Password": ""
+    },
+    "CodePush": {
+        "FileLocal":"local",
+        "Local":{
+            "SavePath":"./bundels"
+        },
+        "Aws":{
+            "Endpoint":"",
+            "Region":"",
+            "S3ForcePathStyle":true,
+            "KeyId":"",
+            "Secret":"",
+            "Bucket":""
+        },
+        "Ftp":{
+            "ServerUrl":"",
+            "UserName":"",
+            "Password":""
+        }
+    },
+    "UrlPrefix": "/",
+    "ResourceUrl": "",
+    "Port": ":8080",
+    "TokenExpireTime": 30
+}

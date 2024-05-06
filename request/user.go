@@ -1,0 +1,50 @@
+package request
+
+import (
+	"log"
+	"net/http"
+	"strconv"
+
+	"com.lc.go.codepush/server/config"
+	"com.lc.go.codepush/server/model"
+	"com.lc.go.codepush/server/utils"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+)
+
+type User struct{}
+
+type loginUser struct {
+	UserName *string `json:"userName" binding:"required"`
+	Password *string `json:"password" binding:"required"`
+}
+
+func (User) Login(ctx *gin.Context) {
+	loginUser := loginUser{}
+	if err := ctx.ShouldBindBodyWith(&loginUser, binding.JSON); err == nil {
+		user := model.GetOne[model.User]("user_name", &loginUser.UserName)
+		if user == nil || *user.Password != *loginUser.Password {
+			panic("UserName or Psssword error")
+		}
+		// uuid, _ := uuid.NewUUID()
+		timeNow := utils.GetTimeNow()
+		expireTime := *timeNow + (config.GetConfig().TokenExpireTime * 24 * 60 * 60 * 1000)
+		token := utils.CreateToken(strconv.Itoa(*user.Id) + ":" + strconv.FormatInt(expireTime, 10))
+		del := false
+		tokenInfo := model.Token{
+			Uid:        user.Id,
+			Token:      &token,
+			ExpireTime: &expireTime,
+			Del:        &del,
+		}
+		err := model.Create[model.Token](&tokenInfo)
+		if err != nil {
+			panic("create token error")
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"token": token,
+		})
+	} else {
+		log.Panic(err.Error())
+	}
+}

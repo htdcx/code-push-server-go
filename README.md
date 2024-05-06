@@ -1,5 +1,5 @@
 # Code-Push-Server-Go
-CodePush Server Go is a CodePush progam server,Use with [code-push-go]()
+CodePush Server Go is a CodePush progam server,Use with [code-push-go](https://github.com/htdcx/code-push-go)
 
 ## Support Version
 - mysql  >= 8.0
@@ -13,12 +13,13 @@ CodePush Server Go is a CodePush progam server,Use with [code-push-go]()
 - Local
 - AWS S3 
 - FTP
+
 ## Before installation, please ensure that the following procedures have been installed
 - mysql
 - golang
 - redis
-## HOW TO INSTALL code-push-server
 
+## Install code-push-server
 ```shell
 git clone https://github.com/htdcx/code-push-server-go.git
 cd code-push-server-go
@@ -89,10 +90,18 @@ set GOARCH=amd64
 set GOOS=linux #windows,darwin
 go build -o code-push-server-go(.exe) main.go
 
-#copy config/app.(model).json and config/app.json to run dir and run
+#copy config/app.(model).json and config/app.json to run dir 
+#run
 ./code-push-server-go
 ```
-#### Use [code-push-go]()
+### Default user name and password
+- Username:admin
+- Password:admin
+
+### change password and user name
+- Change mysql users tables (password need md5)
+
+#### Use [code-push-go](https://github.com/htdcx/code-push-go)
 ``` shell
 ./code-push-go login -u (userName) -p (password) -h (serverUrl)
 ```
