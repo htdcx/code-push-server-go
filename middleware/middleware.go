@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"reflect"
-	"strconv"
-	"strings"
 
 	"com.lc.go.codepush/server/model"
 	"com.lc.go.codepush/server/model/constants"
@@ -24,17 +22,16 @@ func CheckToken(ctx *gin.Context) {
 	if token == "" {
 		log.Panic("Token不能为空")
 	}
-	str := utils.GetDecToken(token)
-	info := strings.Split(str, ":")
-	expireTime, _ := strconv.ParseInt(info[1], 10, 64)
-	if *utils.GetTimeNow() > expireTime {
+
+	tokenNow := model.GetOne[model.Token]("token=?", token)
+
+	if *utils.GetTimeNow() > *tokenNow.ExpireTime || *tokenNow.Del {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"code": 1100,
 			"msg":  "Token expire",
 		})
 		ctx.Abort()
 	} else {
-		tokenNow := model.GetOne[model.Token]("token=?", token)
 		if (tokenNow != nil && tokenNow.Del != nil && *tokenNow.Del) || tokenNow == nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"code": 1100,
@@ -44,7 +41,7 @@ func CheckToken(ctx *gin.Context) {
 		}
 	}
 
-	ctx.Set(constants.GIN_USER_ID, info[0])
+	ctx.Set(constants.GIN_USER_ID, *tokenNow.Uid)
 }
 
 // 異常處理

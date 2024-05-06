@@ -3,13 +3,13 @@ package request
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"com.lc.go.codepush/server/config"
 	"com.lc.go.codepush/server/model"
 	"com.lc.go.codepush/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/google/uuid"
 )
 
 type User struct{}
@@ -26,10 +26,10 @@ func (User) Login(ctx *gin.Context) {
 		if user == nil || *user.Password != *loginUser.Password {
 			panic("UserName or Psssword error")
 		}
-		// uuid, _ := uuid.NewUUID()
+		uuid, _ := uuid.NewUUID()
 		timeNow := utils.GetTimeNow()
 		expireTime := *timeNow + (config.GetConfig().TokenExpireTime * 24 * 60 * 60 * 1000)
-		token := utils.CreateToken(strconv.Itoa(*user.Id) + ":" + strconv.FormatInt(expireTime, 10))
+		token := uuid.String()
 		del := false
 		tokenInfo := model.Token{
 			Uid:        user.Id,

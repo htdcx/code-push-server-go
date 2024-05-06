@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"com.lc.go.codepush/server/config"
 	"com.lc.go.codepush/server/db/redis"
@@ -32,7 +31,7 @@ type createAppReq struct {
 func (App) CreateApp(ctx *gin.Context) {
 	createAppInfo := createAppReq{}
 	if err := ctx.ShouldBindBodyWith(&createAppInfo, binding.JSON); err == nil {
-		uid, _ := strconv.Atoi(ctx.MustGet(constants.GIN_USER_ID).(string))
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
 		oldApp := model.App{}.GetAppByUidAndAppName(uid, *createAppInfo.AppName)
 		if oldApp != nil {
 			log.Panic("AppName " + *createAppInfo.AppName + " exist")
@@ -67,7 +66,7 @@ type createBundleReq struct {
 func (App) CreateBundle(ctx *gin.Context) {
 	createBundleReq := createBundleReq{}
 	if err := ctx.ShouldBindBodyWith(&createBundleReq, binding.JSON); err == nil {
-		uid, _ := strconv.Atoi(ctx.MustGet(constants.GIN_USER_ID).(string))
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
 
 		app := model.App{}.GetAppByUidAndAppName(uid, *createBundleReq.AppName)
 		if app == nil {
@@ -136,7 +135,7 @@ type createDeploymentInfo struct {
 func (App) CreateDeployment(ctx *gin.Context) {
 	createDeploymentInfo := createDeploymentInfo{}
 	if err := ctx.ShouldBindBodyWith(&createDeploymentInfo, binding.JSON); err == nil {
-		uid, _ := strconv.Atoi(ctx.MustGet(constants.GIN_USER_ID).(string))
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
 		app := model.App{}.GetAppByUidAndAppName(uid, *createDeploymentInfo.AppName)
 		if app == nil {
 			log.Panic("App not found")
@@ -260,7 +259,7 @@ type deploymentInfo struct {
 func (App) LsDeployment(ctx *gin.Context) {
 	lsAppReq := lsDeploymentReq{}
 	if err := ctx.ShouldBindBodyWith(&lsAppReq, binding.JSON); err == nil {
-		uid, _ := strconv.Atoi(ctx.MustGet(constants.GIN_USER_ID).(string))
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
 		app := model.App{}.GetAppByUidAndAppName(uid, *lsAppReq.AppName)
 		if app == nil {
 			log.Panic("App not found")
@@ -301,7 +300,7 @@ func (App) LsDeployment(ctx *gin.Context) {
 }
 
 func (App) LsApp(ctx *gin.Context) {
-	uid, _ := strconv.Atoi(ctx.MustGet(constants.GIN_USER_ID).(string))
+	uid := ctx.MustGet(constants.GIN_USER_ID).(int)
 	apps := model.GetList[model.App]("uid=?", uid)
 	if len(*apps) <= 0 {
 		log.Panic("No app")
@@ -322,7 +321,7 @@ type checkBundleReq struct {
 func (App) CheckBundle(ctx *gin.Context) {
 	checkBundleReq := checkBundleReq{}
 	if err := ctx.ShouldBindBodyWith(&checkBundleReq, binding.JSON); err == nil {
-		uid, _ := strconv.Atoi(ctx.MustGet(constants.GIN_USER_ID).(string))
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
 
 		app := model.App{}.GetAppByUidAndAppName(uid, *checkBundleReq.AppName)
 		if app == nil {
