@@ -105,9 +105,19 @@ chmod +x code-push-go
 ### Change password and user name
 - Change mysql users tables (password need md5)
 
-#### Use [code-push-go](https://github.com/htdcx/code-push-go)
+### Use [code-push-go](https://github.com/htdcx/code-push-go)
 ``` shell
 ./code-push-go login -u (userName) -p (password) -h (serverUrl)
+```
+### Configuration client [react-native-code-push](https://github.com/microsoft/react-native-code-push)
+
+``` shell
+#ios add to Info.plist
+<key>CodePushServerURL</key>
+<string>${CODE_PUSH_SERVER_URL}</string>
+
+#android add to res/value/strings.xml
+<string moduleConfig="true" name="CodePushServerUrl">${CODE_PUSH_SERVER_URL}</string>
 ```
 
 ## License
