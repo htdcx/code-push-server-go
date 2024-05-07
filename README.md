@@ -2,9 +2,9 @@
 Codepush server go is compatible with [react-native-code-push](https://github.com/microsoft/react-native-code-push). Need to be used with [code-push-go](https://github.com/htdcx/code-push-go). Only supported react-native
 
 ## Support version
-- mysql  >= 8.0
-- golang >= 1.21.5
-- redis  >= 5.0
+- [mysql](https://dev.mysql.com/downloads/mysql/)  >= 8.0
+- [golang](https://go.dev/dl/) >= 1.21.5
+- [redis](https://redis.io/downloads/)  >= 5.0
 
 ## Support client version
 - [react-native-code-push](https://github.com/microsoft/react-native-code-push) >= 7.0
@@ -73,7 +73,7 @@ vi (app.json or app.dev.json or app.prod.json)
             "Password":""
         }
     },
-    "UrlPrefix": "/api",
+    "UrlPrefix": "/",
     "ResourceUrl": (nginx config url or s3),
     "Port": ":8080",
     "TokenExpireTime": 30 (day)
@@ -119,6 +119,11 @@ chmod +x code-push-go
 #android add to res/value/strings.xml
 <string moduleConfig="true" name="CodePushServerUrl">${CODE_PUSH_SERVER_URL}</string>
 ```
+
+## Developing
+- [ ] Delete app
+- [ ] Delete deployment
+- [ ] Rollback bundel
 
 ## License
 MIT License [Read](https://github.com/htdcx/code-push-server-go/blob/main/LICENSE)
