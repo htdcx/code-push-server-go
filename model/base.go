@@ -49,6 +49,10 @@ func GetList[T any](sql string, arg any) *[]T {
 	return t
 }
 
-func Delete[T any](deleteData *T) {
-	userDb.Delete(&deleteData)
+func Delete[T any](deleteData T) error {
+	return userDb.Delete(deleteData).Error
+}
+
+func DeleteWhere(query string, args string, deleteData any) error {
+	return userDb.Where(query, args).Delete(deleteData).Error
 }

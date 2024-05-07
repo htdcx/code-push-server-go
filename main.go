@@ -13,8 +13,8 @@ import (
 )
 
 func main() {
-	fmt.Println("code-push-server-go V1.0.0")
-
+	fmt.Println("code-push-server-go V1.0.1")
+	// gin.SetMode(gin.ReleaseMode)
 	g := gin.Default()
 	g.Use(gzip.Gzip(gzip.DefaultCompression))
 	g.Use(middleware.Recover)
@@ -34,8 +34,8 @@ func main() {
 		authApi.POST("/createDeployment", request.App{}.CreateDeployment)
 		authApi.POST("/createBundle", request.App{}.CreateBundle)
 		authApi.POST("/checkBundle", request.App{}.CheckBundle)
-		authApi.POST("/delApp")
-		authApi.POST("/delDeployment")
+		authApi.POST("/delApp", request.App{}.DelApp)
+		authApi.POST("/delDeployment", request.App{}.DelDeployment)
 		authApi.POST("/lsDeployment", request.App{}.LsDeployment)
 		authApi.GET("/lsApp", request.App{}.LsApp)
 		authApi.POST("/uploadBundle", request.App{}.UploadBundle)

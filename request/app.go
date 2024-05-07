@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"com.lc.go.codepush/server/config"
+	"com.lc.go.codepush/server/db"
 	"com.lc.go.codepush/server/db/redis"
 	"com.lc.go.codepush/server/model"
 	"com.lc.go.codepush/server/model/constants"
@@ -19,6 +20,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/google/uuid"
 	"github.com/jlaffaye/ftp"
+	"gorm.io/gorm"
 )
 
 type App struct{}
@@ -335,6 +337,75 @@ func (App) CheckBundle(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"appName": app.AppName,
 			"os":      app.OS,
+		})
+	} else {
+		log.Panic(err.Error())
+	}
+}
+
+type delAppInfo struct {
+	AppName *string `json:"appName" binding:"required"`
+}
+
+func (App) DelApp(ctx *gin.Context) {
+	delAppInfo := delAppInfo{}
+	if err := ctx.ShouldBindBodyWith(&delAppInfo, binding.JSON); err == nil {
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
+
+		app := model.App{}.GetAppByUidAndAppName(uid, *delAppInfo.AppName)
+		if app == nil {
+			log.Panic("App not found")
+		}
+		deployment := model.Deployment{}.GetByAppids(*app.Id)
+		if deployment != nil && len(*deployment) > 0 {
+			log.Panic("App exist deployment,Delete the deployment first and then delete the app ")
+		}
+		model.Delete[model.App](model.App{Id: app.Id})
+		ctx.JSON(http.StatusOK, gin.H{
+			"success": true,
+		})
+	} else {
+		log.Panic(err.Error())
+	}
+}
+
+type delDeploymentInfo struct {
+	AppName    *string `json:"appName" binding:"required"`
+	Deployment *string `json:"deployment" binding:"required"`
+}
+
+func (App) DelDeployment(ctx *gin.Context) {
+	delDeploymentInfo := delDeploymentInfo{}
+	if err := ctx.ShouldBindBodyWith(&delDeploymentInfo, binding.JSON); err == nil {
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
+
+		app := model.App{}.GetAppByUidAndAppName(uid, *delDeploymentInfo.AppName)
+		if app == nil {
+			log.Panic("App not found")
+		}
+		deployment := model.Deployment{}.GetByAppidAndName(*app.Id, *delDeploymentInfo.Deployment)
+		if deployment == nil {
+			log.Panic("Deployment " + *delDeploymentInfo.Deployment + " not found")
+		}
+		userDb, _ := db.GetUserDB()
+		err := userDb.Transaction(func(tx *gorm.DB) error {
+			if err := tx.Delete(model.Deployment{Id: deployment.Id}).Error; err != nil {
+				panic("DeleteError:" + err.Error())
+			}
+			if err := tx.Where("deployment_id", *deployment.Id).Delete(model.DeploymentVersion{}).Error; err != nil {
+				panic("DeleteError:" + err.Error())
+			}
+			if err := tx.Where("deployment_id", *deployment.Id).Delete(model.Package{}).Error; err != nil {
+				panic("DeleteError:" + err.Error())
+			}
+			return nil
+		})
+		if err != nil {
+			panic("DeleteError:" + err.Error())
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"success": true,
 		})
 	} else {
 		log.Panic(err.Error())
