@@ -121,8 +121,8 @@ chmod +x code-push-go
 ```
 
 ## Developing
-- [ ] Delete app
-- [ ] Delete deployment
+- [X] Delete app
+- [X] Delete deployment
 - [ ] Rollback bundel
 
 ## License
