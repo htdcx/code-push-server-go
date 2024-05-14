@@ -318,6 +318,7 @@ func (App) LsApp(ctx *gin.Context) {
 type checkBundleReq struct {
 	AppName    *string `json:"appName" binding:"required"`
 	Deployment *string `json:"deployment" binding:"required"`
+	Version    *string `json:"version" binding:"required"`
 }
 
 func (App) CheckBundle(ctx *gin.Context) {
@@ -333,10 +334,19 @@ func (App) CheckBundle(ctx *gin.Context) {
 		if deployment == nil {
 			log.Panic("Deployment " + *checkBundleReq.Deployment + " not found")
 		}
+		var hash *string
+		if deployment.VersionId != nil {
+			deployment := model.DeploymentVersion{}.GetByKeyDeploymentIdAndVersion(*deployment.Id, *checkBundleReq.Version)
+			if deployment != nil {
+				pack := model.GetOne[model.Package]("id", deployment.CurrentPackage)
+				hash = pack.Hash
+			}
+		}
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"appName": app.AppName,
 			"os":      app.OS,
+			"hash":    hash,
 		})
 	} else {
 		log.Panic(err.Error())
