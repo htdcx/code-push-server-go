@@ -60,6 +60,7 @@ type createBundleReq struct {
 	AppName     *string `json:"appName" binding:"required"`
 	Deployment  *string `json:"deployment" binding:"required"`
 	DownloadUrl *string `json:"downloadUrl" binding:"required"`
+	Description *string `json:"description" binding:"required"`
 	Version     *string `json:"version" binding:"required"`
 	Size        *int64  `json:"size" binding:"required"`
 	Hash        *string `json:"hash" binding:"required"`
@@ -114,6 +115,7 @@ func (App) CreateBundle(ctx *gin.Context) {
 			Size:         createBundleReq.Size,
 			Hash:         createBundleReq.Hash,
 			Download:     createBundleReq.DownloadUrl,
+			Description:  createBundleReq.Description,
 			Active:       utils.CreateInt(0),
 			Installed:    utils.CreateInt(0),
 			Failed:       utils.CreateInt(0),

@@ -10,6 +10,7 @@ type Package struct {
 	Failed       *int    `json:"failed"`
 	Installed    *int    `json:"installed"`
 	CreateTime   *int64  `json:"create_time"`
+	Description  *string `json:"description"`
 }
 
 func (Package) TableName() string {

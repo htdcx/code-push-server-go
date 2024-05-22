@@ -111,6 +111,7 @@ CREATE TABLE `package` (
   `deployment_id` int DEFAULT NULL,
   `size` bigint DEFAULT NULL,
   `hash` varchar(256) DEFAULT NULL,
+  `description` TEXT DEFAULT NULL,
   `download` varchar(256) DEFAULT NULL,
   `active` int DEFAULT '0',
   `failed` int DEFAULT '0',
@@ -119,6 +120,9 @@ CREATE TABLE `package` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--  `description` is not part of v1.0.1, it can be added by
+--  ALTER TABLE `package` ADD `description` TEXT DEFAULT NULL;
 
 --
 -- Dumping data for table `package`

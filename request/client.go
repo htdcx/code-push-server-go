@@ -16,7 +16,7 @@ import (
 type Client struct{}
 type updateInfo struct {
 	DownloadUrl string `json:"download_url"`
-	// Description            string `json:"description"`
+	Description            string `json:"description"`
 	IsAvailable            bool   `json:"is_available"`
 	IsDisabled             bool   `json:"is_disabled"`
 	TargetBinaryRange      string `json:"target_binary_range"`
@@ -62,6 +62,7 @@ func (Client) CheckUpdate(ctx *gin.Context) {
 				label := strconv.Itoa(*packag.Id)
 				updateInfoRedis.Label = label
 				updateInfoRedis.DownloadUrl = config.ResourceUrl + *packag.Download
+				updateInfoRedis.Description = *packag.Description
 			}
 		}
 		deploymentVersionNew := model.DeploymentVersion{}.GetNewVersionByKeyDeploymentId(*deployment.Id)
@@ -79,6 +80,7 @@ func (Client) CheckUpdate(ctx *gin.Context) {
 			updateInfo.IsMandatory = true
 			updateInfo.Label = updateInfoRedis.Label
 			updateInfo.DownloadUrl = updateInfoRedis.DownloadUrl
+			updateInfo.Description = updateInfoRedis.Description
 		} else if updateInfoRedis.NewVersion != "" && appVersion != updateInfoRedis.NewVersion && utils.FormatVersionStr(appVersion) < utils.FormatVersionStr(updateInfoRedis.NewVersion) {
 			updateInfo.TargetBinaryRange = updateInfoRedis.NewVersion
 			updateInfo.UpdateAppVersion = true
