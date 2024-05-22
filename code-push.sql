@@ -82,6 +82,7 @@ CREATE TABLE `deployment_version` (
   `id` int NOT NULL AUTO_INCREMENT,
   `deployment_id` int DEFAULT NULL,
   `app_version` varchar(45) DEFAULT NULL,
+  `version_num` bigint DEFAULT NULL,
   `current_package` int DEFAULT NULL,
   `update_time` bigint DEFAULT NULL,
   `create_time` bigint DEFAULT NULL,
