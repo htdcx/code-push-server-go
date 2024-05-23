@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	fmt.Println("code-push-server-go V1.0.1")
+	fmt.Println("code-push-server-go V1.0.2")
 	// gin.SetMode(gin.ReleaseMode)
 	g := gin.Default()
 	g.Use(gzip.Gzip(gzip.DefaultCompression))
