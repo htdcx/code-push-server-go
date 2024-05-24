@@ -35,7 +35,7 @@ func GetConfig() appConfig {
 func readJson[T any](path string) T {
 	file, err := os.Open(path)
 	if err != nil {
-		panic(path + "配置文件不存在")
+		panic(path + " config not found")
 	}
 	defer file.Close()
 	decoder := json.NewDecoder(file)
