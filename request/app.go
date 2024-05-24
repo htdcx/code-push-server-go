@@ -453,7 +453,7 @@ func (App) Rollback(ctx *gin.Context) {
 			log.Panic("Version not found")
 		}
 		if deploymentVersion.CurrentPackage == nil {
-			log.Panic("Package is last")
+			log.Panic("There is no upload package for the current version")
 		}
 		newPackage := model.Package{}.GetRollbackPack(*deployment.Id, *deploymentVersion.CurrentPackage, *deploymentVersion.Id)
 

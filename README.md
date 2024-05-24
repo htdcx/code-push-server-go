@@ -120,10 +120,5 @@ chmod +x code-push-go
 <string moduleConfig="true" name="CodePushServerUrl">${CODE_PUSH_SERVER_URL}</string>
 ```
 
-## Developing
-- [X] Delete app
-- [X] Delete deployment
-- [ ] Rollback bundel
-
 ## License
 MIT License [Read](https://github.com/htdcx/code-push-server-go/blob/main/LICENSE)
