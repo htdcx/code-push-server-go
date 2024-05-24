@@ -109,6 +109,7 @@ DROP TABLE IF EXISTS `package`;
 CREATE TABLE `package` (
   `id` int NOT NULL AUTO_INCREMENT,
   `deployment_id` int DEFAULT NULL,
+  `deployment_version_id` int DEFAULT NULL,
   `size` bigint DEFAULT NULL,
   `hash` varchar(256) DEFAULT NULL,
   `description` TEXT DEFAULT NULL,

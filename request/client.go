@@ -15,7 +15,7 @@ import (
 
 type Client struct{}
 type updateInfo struct {
-	DownloadUrl string `json:"download_url"`
+	DownloadUrl            string `json:"download_url"`
 	Description            string `json:"description"`
 	IsAvailable            bool   `json:"is_available"`
 	IsDisabled             bool   `json:"is_disabled"`
@@ -51,18 +51,22 @@ func (Client) CheckUpdate(ctx *gin.Context) {
 		}
 		deploymentVersion := model.DeploymentVersion{}.GetByKeyDeploymentIdAndVersion(*deployment.Id, appVersion)
 		if deploymentVersion != nil {
-			packag := model.GetOne[model.Package]("id", deploymentVersion.CurrentPackage)
-			if packag != nil {
-				// && *packag.Hash != packageHash
-				updateInfoRedis.TargetBinaryRange = *deploymentVersion.AppVersion
-				updateInfoRedis.PackageHash = *packag.Hash
-				updateInfoRedis.PackageSize = *packag.Size
-				updateInfoRedis.IsAvailable = true
-				updateInfoRedis.IsMandatory = true
-				label := strconv.Itoa(*packag.Id)
-				updateInfoRedis.Label = label
-				updateInfoRedis.DownloadUrl = config.ResourceUrl + *packag.Download
-				updateInfoRedis.Description = *packag.Description
+			if deploymentVersion.CurrentPackage != nil {
+				packag := model.GetOne[model.Package]("id", deploymentVersion.CurrentPackage)
+				if packag != nil {
+					// && *packag.Hash != packageHash
+					updateInfoRedis.TargetBinaryRange = *deploymentVersion.AppVersion
+					updateInfoRedis.PackageHash = *packag.Hash
+					updateInfoRedis.PackageSize = *packag.Size
+					updateInfoRedis.IsAvailable = true
+					updateInfoRedis.IsMandatory = true
+					label := strconv.Itoa(*packag.Id)
+					updateInfoRedis.Label = label
+					updateInfoRedis.DownloadUrl = config.ResourceUrl + *packag.Download
+					if packag.Description != nil {
+						updateInfoRedis.Description = *packag.Description
+					}
+				}
 			}
 		}
 		deploymentVersionNew := model.DeploymentVersion{}.GetNewVersionByKeyDeploymentId(*deployment.Id)
