@@ -31,3 +31,7 @@ func (DeploymentVersion) GetNewVersionByKeyDeploymentId(deploymentId int) *Deplo
 	}
 	return deploymentVersion
 }
+
+func (DeploymentVersion) UpdateCurrentPackage(id int, pid *int) {
+	userDb.Raw("update deployment_version set current_package=? where id=?", pid, id).Scan(&DeploymentVersion{})
+}

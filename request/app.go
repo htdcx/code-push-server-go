@@ -111,15 +111,16 @@ func (App) CreateBundle(ctx *gin.Context) {
 		// uuid, _ := uuid.NewUUID()
 		// hash := uuid.String()
 		newPackage := model.Package{
-			DeploymentId: deployment.Id,
-			Size:         createBundleReq.Size,
-			Hash:         createBundleReq.Hash,
-			Download:     createBundleReq.DownloadUrl,
-			Description:  createBundleReq.Description,
-			Active:       utils.CreateInt(0),
-			Installed:    utils.CreateInt(0),
-			Failed:       utils.CreateInt(0),
-			CreateTime:   utils.GetTimeNow(),
+			DeploymentId:        deployment.Id,
+			DeploymentVersionId: deploymentVersion.Id,
+			Size:                createBundleReq.Size,
+			Hash:                createBundleReq.Hash,
+			Download:            createBundleReq.DownloadUrl,
+			Description:         createBundleReq.Description,
+			Active:              utils.CreateInt(0),
+			Installed:           utils.CreateInt(0),
+			Failed:              utils.CreateInt(0),
+			CreateTime:          utils.GetTimeNow(),
 		}
 		model.Create[model.Package](&newPackage)
 		deploymentVersion.CurrentPackage = newPackage.Id
@@ -419,6 +420,72 @@ func (App) DelDeployment(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"success": true,
 		})
+	} else {
+		log.Panic(err.Error())
+	}
+}
+
+type rollbackReq struct {
+	AppName    *string `json:"appName" binding:"required"`
+	Deployment *string `json:"deployment" binding:"required"`
+	Version    *string `json:"version"`
+}
+
+func (App) Rollback(ctx *gin.Context) {
+	rollbackReq := rollbackReq{}
+	if err := ctx.ShouldBindBodyWith(&rollbackReq, binding.JSON); err == nil {
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
+
+		app := model.App{}.GetAppByUidAndAppName(uid, *rollbackReq.AppName)
+		if app == nil {
+			log.Panic("App not found")
+		}
+		deployment := model.Deployment{}.GetByAppidAndName(*app.Id, *rollbackReq.Deployment)
+		if deployment == nil {
+			log.Panic("Deployment " + *rollbackReq.Deployment + " not found")
+		}
+
+		var deploymentVersion *model.DeploymentVersion
+		if deployment.VersionId != nil {
+			deploymentVersion = model.DeploymentVersion{}.GetByKeyDeploymentIdAndVersion(*deployment.Id, *rollbackReq.Version)
+		}
+		if deploymentVersion == nil {
+			log.Panic("Version not found")
+		}
+		if deploymentVersion.CurrentPackage == nil {
+			log.Panic("Package is last")
+		}
+		newPackage := model.Package{}.GetRollbackPack(*deployment.Id, *deploymentVersion.CurrentPackage, *deploymentVersion.Id)
+
+		userDb, _ := db.GetUserDB()
+		err := userDb.Transaction(func(tx *gorm.DB) error {
+			if newPackage == nil {
+				model.DeploymentVersion{}.UpdateCurrentPackage(*deploymentVersion.Id, nil)
+			} else {
+				model.DeploymentVersion{}.UpdateCurrentPackage(*deploymentVersion.Id, newPackage.Id)
+			}
+			return nil
+		})
+		if err != nil {
+			panic("RollbackError:" + err.Error())
+		}
+
+		if newPackage != nil {
+			ctx.JSON(http.StatusOK, gin.H{
+				"Success":    true,
+				"Version":    *deploymentVersion.AppVersion,
+				"PackId":     *newPackage.Id,
+				"Size":       *newPackage.Size,
+				"Hash":       *newPackage.Hash,
+				"CreateTime": *newPackage.CreateTime,
+			})
+		} else {
+			ctx.JSON(http.StatusOK, gin.H{
+				"Success": true,
+				"Version": *deploymentVersion.AppVersion,
+			})
+		}
+		redis.DelRedisObj(constants.REDIS_UPDATE_INFO + *deployment.Key + "*")
 	} else {
 		log.Panic(err.Error())
 	}
