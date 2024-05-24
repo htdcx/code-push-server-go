@@ -39,6 +39,7 @@ func main() {
 		authApi.POST("/lsDeployment", request.App{}.LsDeployment)
 		authApi.GET("/lsApp", request.App{}.LsApp)
 		authApi.POST("/uploadBundle", request.App{}.UploadBundle)
+		authApi.POST("/rollback", request.App{}.Rollback)
 	}
 
 	g.Run(configs.Port)
