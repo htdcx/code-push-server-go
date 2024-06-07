@@ -20,7 +20,7 @@ func CheckToken(ctx *gin.Context) {
 	}
 
 	if token == "" {
-		log.Panic("Token不能为空")
+		log.Panic("Token can't null")
 	}
 
 	tokenNow := model.GetOne[model.Token]("token=?", token)
