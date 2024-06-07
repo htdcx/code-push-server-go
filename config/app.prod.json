@@ -21,7 +21,7 @@
     "CodePush": {
         "FileLocal":"local",
         "Local":{
-            "SavePath":"./bundels"
+            "SavePath":"./bundles"
         },
         "Aws":{
             "Endpoint":"",

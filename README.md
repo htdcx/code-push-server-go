@@ -57,7 +57,7 @@ vi (app.json or app.dev.json or app.prod.json)
     "CodePush": {
         "FileLocal":(local,aws,ftp),
         "Local":{
-            "SavePath":"./bundels"
+            "SavePath":"./bundles"
         },
         "Aws":{
             "Endpoint":"",
