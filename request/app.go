@@ -340,7 +340,7 @@ func (App) CheckBundle(ctx *gin.Context) {
 		var hash *string
 		if deployment.VersionId != nil {
 			deployment := model.DeploymentVersion{}.GetByKeyDeploymentIdAndVersion(*deployment.Id, *checkBundleReq.Version)
-			if deployment != nil {
+			if deployment != nil && deployment.CurrentPackage != nil {
 				pack := model.GetOne[model.Package]("id", deployment.CurrentPackage)
 				hash = pack.Hash
 			}
