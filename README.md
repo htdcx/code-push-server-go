@@ -49,7 +49,7 @@ vi (app.json or app.dev.json or app.prod.json)
     },
     "Redis": {
         "Host": "127.0.0.1",
-        "Prot": 6379,
+        "Port": 6379,
         "DBIndex": 0,
         "UserName": "",
         "Password": ""

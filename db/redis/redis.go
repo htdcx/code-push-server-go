@@ -22,7 +22,7 @@ func GetRedis() (redisD *redis.Client, err error) {
 	}
 	redisConfig := config.GetConfig().Redis
 	redisDB = redis.NewClient(&redis.Options{
-		Addr:     redisConfig.Host + ":" + strconv.Itoa(int(redisConfig.Prot)),
+		Addr:     redisConfig.Host + ":" + strconv.Itoa(int(redisConfig.Port)),
 		Username: redisConfig.UserName,
 		Password: redisConfig.Password,
 		DB:       int(redisConfig.DBIndex),
