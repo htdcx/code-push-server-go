@@ -73,7 +73,7 @@ type dbConfigObj struct {
 }
 type redisConfig struct {
 	Host     string
-	Prot     uint
+	Port     uint
 	DBIndex  uint
 	UserName string
 	Password string
