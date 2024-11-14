@@ -47,11 +47,11 @@ func DelRedisObj(key string) {
 	for iter.Next(ctx) {
 		err := redis.Del(ctx, iter.Val()).Err()
 		if err != nil {
-			panic(err)
+			panic("Redis error:" + err.Error())
 		}
 	}
 	if err := iter.Err(); err != nil {
-		panic(err)
+		panic("Redis error:" + err.Error())
 	}
 }
 
@@ -66,7 +66,7 @@ func GetRedisObj[T any](key string) *T {
 	var obj T
 	err := json.Unmarshal([]byte(status.Val()), &obj)
 	if err != nil {
-		log.Panic(err.Error())
+		panic("Redis error:" + err.Error())
 	}
 	return &obj
 }
