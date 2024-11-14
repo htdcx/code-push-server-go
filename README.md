@@ -93,7 +93,7 @@ go build -o code-push-server-go(.exe) main.go
 #copy config/app.(model).json and config/app.json to run dir 
 
 #Linux server
-chmod +x code-push-go
+chmod +x code-push-server-go
 
 #run
 ./code-push-server-go
