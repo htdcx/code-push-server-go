@@ -103,7 +103,10 @@ chmod +x code-push-server-go
 - Password:admin
 
 ### Change password and user name
-- Change mysql users tables (password need md5)
+``` shell
+ Version >= 1.0.5 :./code-push-go change_password
+ Version <= 1.0.4 :Change mysql users tables (password need md5)
+```
 
 ### Use [code-push-go](https://github.com/htdcx/code-push-go)
 ``` shell

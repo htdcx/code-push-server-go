@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	fmt.Println("code-push-server-go V1.0.4")
+	fmt.Println("code-push-server-go V1.0.5")
 	// gin.SetMode(gin.ReleaseMode)
 	g := gin.Default()
 	g.Use(gzip.Gzip(gzip.DefaultCompression))
@@ -42,6 +42,7 @@ func main() {
 		authApi.GET("/lsApp", request.App{}.LsApp)
 		authApi.POST("/uploadBundle", request.App{}.UploadBundle)
 		authApi.POST("/rollback", request.App{}.Rollback)
+		authApi.POST("/changePassword", request.User{}.ChangePassword)
 	}
 
 	g.Run(configs.Port)

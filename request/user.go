@@ -6,6 +6,7 @@ import (
 
 	"com.lc.go.codepush/server/config"
 	"com.lc.go.codepush/server/model"
+	"com.lc.go.codepush/server/model/constants"
 	"com.lc.go.codepush/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -43,6 +44,26 @@ func (User) Login(ctx *gin.Context) {
 		}
 		ctx.JSON(http.StatusOK, gin.H{
 			"token": token,
+		})
+	} else {
+		log.Panic(err.Error())
+	}
+}
+
+type changePasswordReq struct {
+	Password *string `json:"password" binding:"required"`
+}
+
+func (User) ChangePassword(ctx *gin.Context) {
+	req := changePasswordReq{}
+	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err == nil {
+		uid := ctx.MustGet(constants.GIN_USER_ID).(int)
+		err := model.User{}.ChangePassword(uid, *req.Password)
+		if err != nil {
+			panic(err.Error())
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"success": true,
 		})
 	} else {
 		log.Panic(err.Error())
